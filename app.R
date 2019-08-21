@@ -62,6 +62,13 @@ ui <- shinyUI(fluidPage(
         color: 'E6E6E6';
         z-index: 1000;
       }
+      @media (max-width: 600px) {
+      footer {
+        display: none;
+        width: 0%;
+        height: 0%;
+      }
+}
       
   )"
     ))
