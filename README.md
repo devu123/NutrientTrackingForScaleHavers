@@ -6,7 +6,7 @@ with emphasis on micronutrients.
 
 
 
-
+![](images/NutrientTracking.PNG)
 
 
 Add ingredients you have eaten / will eat, and see what nutrients you are putting in your body, with some idea of 
