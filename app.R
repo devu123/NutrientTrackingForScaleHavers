@@ -83,20 +83,17 @@ ui <- shinyUI(fluidPage(
                 # Sidebar panel for inputs ----
                 
                 sidebarPanel(
-                             uiOutput("ingredientName"),
-                             uiOutput("ingredientQuantity"),
-                             #submit button
-                             actionButton("submit", label = "Add Ingredient"),
-                             # percent of day for daily nutrition comparison 
-                             sliderTextInput('percentOfDay', "Percent Of Daily Food Intake \n Represented \n
-                                         In Ingredient List",
-                                         selected = 33, choices = round(c(
-                                           seq(1,99, by = 1),
-                                           seq(100,700, by = 100)), 
-                                           0),
-                                         grid = TRUE),
-                             #clear all ingredients
-                             actionButton("clear", label = "Clear All Ingredients")
+                  uiOutput("ingredientName"),
+                  uiOutput("ingredientQuantity"),
+                  #submit button
+                  actionButton("submit", label = "Add Ingredient"),
+                  # percent of day for daily nutrition comparison 
+                  # percent of day for daily nutrition comparison 
+                  radioButtons('percentOfDay', "Amount of Food Intake \n Represented \n
+                                         In Ingredient List", inline = T, 
+                               choices = c("Meal", "Day", "Week")),
+                  #clear all ingredients
+                  actionButton("clear", label = "Clear All Ingredients")
                 )
                 ,
                 # tabs for displaying outputs ----
@@ -177,17 +174,18 @@ server <- shinyServer(function(input, output) {
     row.names(totalNutrient) <- NULL
     names(totalNutrient) <- c("Nutrient", "Amount(g, or kcal for Energy)")
     df <- totalNutrient
-    df$`Projected Daily Amount` <- format(df['Amount(g, or kcal for Energy)'] * (100/input$percentOfDay), nsmall = 2)
+    mealScaler <- switch(input$percentOfDay, Meal = 100/3, Day = 100, Week = 700)
+    df$`Projected Daily Amount` <- format(df['Amount(g, or kcal for Energy)'] * (100/mealScaler), nsmall = 2)
     df <- df %>% full_join(nationalInstituteHealthDV, by = 'Nutrient')  
-    arrange(df, factor(ifelse(grepl("carb|protein|energy|fat", df$Nutrient, ignore.case = T), 0, 1)))
+    df <- arrange(df, factor(ifelse(grepl("carb|protein|energy|fat", df$Nutrient, ignore.case = T), 0, 1)))
     
-    })
-
+  })
+  
   output$dataframe <- renderDataTable( ingredientData(), options = 
                                          list(paging = F, searching = F, ordering=F, 
                                               language = list(
                                                 zeroRecords = "Added ingredients will show up here")))
-
+  
   output$nutritionDataframe <- renderDataTable( nutrientData(),  
                                                 options = list(rowCallback = I('
             function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
@@ -197,9 +195,9 @@ server <- shinyServer(function(input, output) {
                                       if (parseFloat(aData[2]) < parseFloat(aData[3]))
                                       $("td:eq(0)", nRow).css("background-color", "#B5B7F0");
   }'),
-      paging = F, searching = F, ordering=F))
+                                                               paging = F, searching = F, ordering=F))
   
-  }
+}
 )
 
 #run app
