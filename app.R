@@ -26,8 +26,15 @@ ingredients <- ingredients[which(!ingredients$nutrientName %in%  c('Folate, DFE'
 # branded_foods <- read.csv("food_branded.csv")
 # branded_foods <- branded_foods %>% select("fdc_id", "description") %>% rename('name' = 'description')
 # 
-# branded_foods_nutrients <- read.csv("food_nutrient_branded.csv")
 # 
+#  branded_foods_nutrients_1 <- read.csv('food_nutrient_branded_1.csv')
+#  branded_foods_nutrients_2 <- read.csv('food_nutrient_branded_2.csv')
+#  branded_foods_nutrients_3 <- read.csv('food_nutrient_branded_3.csv')
+#  branded_foods_nutrients <- bind_rows(branded_foods_nutrients_1,
+#                                       branded_foods_nutrients_2,
+#                                       branded_foods_nutrients_3)
+#  
+ # 
 # branded_foods_joined <- branded_foods %>% left_join(branded_foods_nutrients, by = 'fdc_id')
 # 
 # 
